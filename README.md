@@ -1,117 +1,93 @@
-The content below is an example project proposal / requirements document. Replace the text below the lines marked "__TODO__" with details specific to your project. Remove the "TODO" lines.
-
-(___TODO__: your project name_)
-
-# Shoppy Shoperson 
+# Game of Life
 
 ## Overview
 
-(___TODO__: a brief one or two paragraph, high-level description of your project_)
-
-Remembering what to buy at the grocery store is waaaaay too difficult. Also, shopping for groceries when you're hungry leads to regrettable purchases. Sooo... that's where Shoppy Shoperson comes in!
-
-Shoppy Shoperson is a web app that will allow users to keep track of multiple grocery lists. Users can register and login. Once they're logged in, they can create or view their grocery list. For every list that they have, they can add items to the list or cross off items.
+An interactive implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life), a cellular automation game, that allows
+- customized (programmable?) rules
+- customized board setup, in-game modification
+- users to share their own game config with the community and make comments
+- more features to be added...
 
 
 ## Data Model
 
-(___TODO__: a description of your application's data and their relationships to each other_) 
+The application will store User, Board and Comment
 
-The application will store Users, Lists and Items
-
-* users can have multiple lists (via references)
-* each list can have multiple items (by embedding)
-
-(___TODO__: sample documents_)
+* User can have multiple Board (via references)
+* each Board can have multiple Comment (via references)
 
 An Example User:
 
 ```javascript
 {
-  username: "shannonshopper",
+  uid: "nv982jc9304" //some hash
+  username: "gliderlover",
   hash: // a password hash,
-  lists: // an array of references to List documents
+  lists: [glider, gun, myspaceship1]// an array of references to Board documents
 }
 ```
 
-An Example List with Embedded Items:
+An Example Board:
 
 ```javascript
 {
-  user: // a reference to a User object
-  name: "Breakfast foods",
-  items: [
-    { name: "pancakes", quantity: "9876", checked: false},
-    { name: "ramen", quantity: "2", checked: true},
-  ],
+  user: gliderlover// a reference to a User object
+  name: "Breakfast foods", //default to empty string
+  board: //a large enough 2d-matrix of bool values, representing the game board
   createdAt: // timestamp
 }
 ```
 
+An example Comment
 
-## [Link to Commented First Draft Schema](db.js) 
+```javascript
+{
+  user: gliderlover // a reference to a User object
+  title: "", //default to empty string
+  comment: "nice work with the spaceship!" //plain-text
+  createdAt: // timestamp
+  quote: // a reference to the quote
+}
+```
 
-(___TODO__: create a first draft of your Schemas in db.js and link to it_)
+
+## [Link to Commented First Draft Schema](db.js)
 
 ## Wireframes
 
-(___TODO__: wireframes for all of the pages on your site; they can be as simple as photos of drawings or you can use a tool like Balsamiq, Omnigraffle, etc._)
+/ - homepage for playing your own game
 
-/list/create - page for creating a new shopping list
+![root wireframe](documentation/root.png)
 
-![list create](documentation/list-create.png)
+/community - page for community games
 
-/list - page for showing all shopping lists
-
-![list](documentation/list.png)
-
-/list/slug - page for showing specific shopping list
-
-![list](documentation/list-slug.png)
+![community wireframe](documentation/community.png)
 
 ## Site map
+There are two sites:
 
-(___TODO__: draw out a site map that shows how pages are related to each other_)
-
-Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia/commons/2/20/Sitemap_google.jpg), but you can create one without the screenshots, drop shadows, etc. ... just names of pages and where they flow to.
+www.gameoflife2020.com/ <-> www.gameoflife2020.com/community
 
 ## User Stories or Use Cases
 
-(___TODO__: write out how your application will be used through [user stories](http://en.wikipedia.org/wiki/User_story#Format) and / or [use cases](https://www.mongodb.com/download-center?jmp=docs&_ga=1.47552679.1838903181.1489282706#previous)_)
-
-1. as non-registered user, I can register a new account with the site
-2. as a user, I can log in to the site
-3. as a user, I can create a new grocery list
-4. as a user, I can view all of the grocery lists I've created in a single list
-5. as a user, I can add items to an existing grocery list
-6. as a user, I can cross off items in an existing grocery list
+1. as a user, I can play with my customized game
+2. as a user, I can write customized game rules
+3. as a user, I can choose to share my game with the community
+3. as a user, I can view, play, and comment on community games
 
 ## Research Topics
 
-(___TODO__: the research topics that you're planning on working on along with their point values... and the total points of research topics listed_)
-
-* (5 points) Integrate user authentication
-    * I'm going to be using passport for user authentication
-    * And account has been made for testing; I'll email you the password
-    * see <code>cs.nyu.edu/~jversoza/ait-final/register</code> for register page
-    * see <code>cs.nyu.edu/~jversoza/ait-final/login</code> for login page
+* (3 points) Unit Testing with Mocha
 * (4 points) Perform client side form validation using a JavaScript library
-    * see <code>cs.nyu.edu/~jversoza/ait-final/my-form</code>
-    * if you put in a number that's greater than 5, an error message will appear in the dom
-* (5 points) vue.js
-    * used vue.js as the frontend framework; it's a challenging library to learn, so I've assigned it 5 points
+* (4 points) React
+    * used React as the frontend framework
 
-10 points total out of 8 required points (___TODO__: addtional points will __not__ count for extra credit_)
+11 points total out of 8 required points
 
 
-## [Link to Initial Main Project File](app.js) 
-
-(___TODO__: create a skeleton Express application with a package.json, app.js, views folder, etc. ... and link to your initial app.js_)
+## [Link to Initial Main Project File](app.js)
 
 ## Annotations / References Used
 
-(___TODO__: list any tutorials/references/etc. that you've based your code off of_)
-
-1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
-2. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this)
-
+1. [tutorial on using Mocha for unit testing](https://mochajs.org/#getting-started) - (source code not added yet)
+2. [tutorial on react](https://reactjs.org/tutorial/tutorial.html) - (source code not added yet)

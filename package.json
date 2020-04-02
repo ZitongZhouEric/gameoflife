@@ -1,0 +1,27 @@
+{
+  "name": "zitongzhoueric-final-project",
+  "version": "1.0.0",
+  "description": "final project for cs480",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-csci-ua-0480-008-spring-2020/zitongzhouEric-final-project.git"
+  },
+  "author": "EricZitongZhou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-csci-ua-0480-008-spring-2020/zitongzhouEric-final-project/issues"
+  },
+  "homepage": "https://github.com/nyu-csci-ua-0480-008-spring-2020/zitongzhouEric-final-project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hbs": "^4.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.1"
+  }
+}
