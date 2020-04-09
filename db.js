@@ -1,31 +1,39 @@
 const mongoose = require('mongoose');
-// schema that describes article
+
+//mongoose options
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: true
+};
+
 
 // blueprint for documents
 const UserSchema = new mongoose.Schema({
-  uid: String,
   username: {type: String, required: true},
-  hash: String,
-  list: [Board]
+  board: {type: mongoose.Schema.ObjectId, ref: 'BoardSchema'}
 });
 
 const BoardSchema = new mongoose.Schema({
-  user: UserSchema,
+  user: {type: mongoose.Schema.ObjectId, ref: 'UserSchema'},
   name: {type: String, required: true},
-  board: ,
+  board: [Boolean],
   createdAt: Date
-  
 });
 
 const CommentSchema = new mongoose.Schema({
-  user: UserSchema,
-  title: String,
+  username: String,
   comment: {type: String, required: true},
+  board: {type: mongoose.Schema.ObjectId, ref: 'BoardSchema'},
   createdAt: Date,
-  quote: CommentSchema
+  quote: {type: mongoose.Schema.ObjectId, ref: 'CommentSchema'}
 });
 
 mongoose.model('User', UserSchema); // collection name will be articles
 mongoose.model('Board', BoardSchema);
 mongoose.model('Comment', CommentSchema);
-mongoose.connect('mongodb://localhost/');
+mongoose.connect('mongodb://localhost/game', mongooseOptions);
+
+console.log('Schema Registered\n');
+
