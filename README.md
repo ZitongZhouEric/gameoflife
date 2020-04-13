@@ -77,6 +77,7 @@ www.gameoflife2020.com/ <-> www.gameoflife2020.com/community
 
 ## Research Topics
 
+* (3 points) HTML Canvas with Client Side JavaScript
 * (3 points) Unit Testing with Mocha
 * (4 points) Perform client side form validation using a JavaScript library
 * (4 points) React
