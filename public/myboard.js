@@ -1,3 +1,13 @@
+/*
+myboard.js
+Acknowledgement: 
+	https://bitstorm.org/gameoflife/;
+	https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity;
+*/ 
+
+
+//front-end, animated, html canvas for displaying the board
+
 const myBoard = {
 		canvas: document.getElementById('canvas'),
 		updateBoard: function() {
