@@ -23,7 +23,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/community', (req, res) => {
-	res.render('community', {title: 'this is /community'});
+	Comment.find({}, (err, comments) => {
+		res.render('community', {title: 'this is /community', comments: comments});
+	})
+	
 });
 
 app.post('/community', (req, res) => {
