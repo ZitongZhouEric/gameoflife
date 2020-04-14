@@ -1,3 +1,8 @@
+//import.js
+//zitongzhoueric 
+
+//feed some data into the database for testing
+
 const mongoose = require('mongoose');
 
 require('./db');
@@ -8,9 +13,15 @@ const Board = mongoose.model('Board');
 const Comment = mongoose.model('Comment');
 
 //clear all existing documents
-User.deleteOne({});
-Board.deleteMany({});
-Comment.deleteMany({});
+User.deleteOne({}, (err, log) => {
+	console.log(log);
+});
+Board.deleteMany({}, (err, log) => {
+	console.log(log);
+});
+Comment.deleteMany({}, (err, log) => {
+	console.log(log);
+});
 
 const board1 = require('./data/board1.json');
 
@@ -65,7 +76,9 @@ function createcomment(user, board){
 
 
 function finalize(user, board){
-	User.updateOne({_id: user._id}, {board: board._id});
+	User.updateOne({_id: user._id}, {board: board._id}, (err, log) => {
+		console.log(log);
+	});
 };
 
 
