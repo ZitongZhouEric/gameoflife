@@ -6,6 +6,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const BoardDS = require('./ds.js');
+const PORT = process.env.PORT || 3000;
 
 require('./db');
 require('./db.js');
@@ -40,4 +41,5 @@ app.post('/community', (req, res) => {
 	res.redirect('/community');
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(PORT);
+console.log("app listening on ", PORT);
