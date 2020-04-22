@@ -23,6 +23,14 @@ app.get('/', (req, res) => {
 	res.render('index', {title: "this is /"});
 });
 
+app.post('/', (req, res) => {
+	//TODO: Store this rule in the database? perhaps
+	//TODO: Use this rule in the front-end js to render board
+	let userRule = req.body.rule;
+	console.log(userRule);
+	res.redirect('/');
+})
+
 app.get('/community', (req, res) => {
 	Comment.find({}, (err, comments) => {
 		res.render('community', {title: 'this is /community', comments: comments});

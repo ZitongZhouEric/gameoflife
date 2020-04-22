@@ -4,4 +4,23 @@
 	<canvas id="canvas"></canvas>
 </div>
 
+<div id="user-alive-rule-container">
+	<form action="/" method="post">
+		<label for="user-alive-rule">Enter your own rule</label>
+		<textarea id="user-alive-rule" name="rule" placeholder="this.isAlive = function(left, right, up, down){
+			let neighborsAlive = 0;
+			if (left)
+				neighborsAlive++;
+			if (right)
+				neighborsAlive++;
+			if (up)
+				neighborsAlive++;
+			if (down)
+				neighborsAlive++;
+			return (neighborsAlive === 2 || neighborsAlive === 3);
+		}"></textarea><br>
+		<input type="submit" name="submit-button">
+	</form>
+</div>
+
 <script type="text/javascript" src="/myboard.js"></script>
