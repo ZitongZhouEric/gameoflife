@@ -5,6 +5,8 @@ Acknowledgement:
 	https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity;
 */ 
 
+//board is running
+let isRunning = false;
 
 //data structure of the board 
 class Board{
@@ -31,7 +33,6 @@ class Board{
 			this.data.push(value);
 	}
 
-	//for testing only
 	setCell2(row, col, value){
 		this.data[row * this.pixels + col] = value;
 	}
@@ -87,10 +88,26 @@ const myBoard = {
 		pixelWidth: 8,
 		lineWidth: 1,
 		pixels: 100,
-		board: undefined,
+		board: new Board(),
+		ms: 1000,
 		indexToPixel: function(x, y){
 			//return [col, row]
-			return [1 + y * (this.pixelWidth + this.lineWidth), 1 + x * (this.pixelWidth + this.lineWidth)];
+			return [2 + y * (this.pixelWidth + this.lineWidth), 2 + x * (this.pixelWidth + this.lineWidth)];
+		},
+		pixelToIndex: function(col, row){
+			if (col % 9 == 1 || row % 9 == 1)
+				return "NON";
+			else{
+				return [Math.floor((row - 2) / (this.pixelWidth + this.lineWidth)), Math.floor((col - 2) / (this.pixelWidth + this.lineWidth))];
+			}
+		},
+		flipCeil(row, col){
+			this.board.setCell2(row, col, !this.board.getCell(row, col));
+			this.flipCeilColor(row, col);
+		},
+		flipCeilColor(row, col){
+			this.context.fillStyle = this.board.getCell(row, col)? "#EEEE00" : "#FFFFFF";
+			this.context.fillRect(...this.indexToPixel(row, col), this.pixelWidth - 1, this.pixelWidth - 1);
 		},
 		renderCanvasOnNext: function(){
 			for (let row = 0; row < this.pixels; row++){
@@ -122,14 +139,14 @@ const myBoard = {
 
 			//vertical grid lines
 
-			for (let x = 0; x <= this.canvas.width; x += this.pixelWidth + this.lineWidth){
+			for (let x = 1; x <= this.canvas.width; x += this.pixelWidth + this.lineWidth){
 				ctx.moveTo(x, 0);
 				ctx.lineTo(x, this.canvas.height);
 				ctx.stroke();
 			}
 
 			//horizontal grid lines
-			for (let y = 0; y <= this.canvas.height; y += this.pixelWidth + this.lineWidth){
+			for (let y = 1; y <= this.canvas.height; y += this.pixelWidth + this.lineWidth){
 				ctx.moveTo(0, y);
 				ctx.lineTo(this.canvas.width, y);
 				ctx.stroke();
@@ -149,6 +166,7 @@ const myBoard = {
 
 		},
 		start: function () {
+			
 			this.canvas.width = this.pixels * (this.pixelWidth + this.lineWidth) + this.lineWidth;
 			this.canvas.height = this.canvas.width;
 
@@ -158,7 +176,21 @@ const myBoard = {
 			this.boardGridSetup();
 
 			this.frameNo = 0;
-			this.interval = setInterval(this.updateBoard.bind(this), 1000);
+
+			//this.continue(1000);
+			
+		},
+		continue: function (ms){
+			this.interval = setInterval(this.updateBoard.bind(this), ms);
+			isRunning = true;
+		},
+		stop: function(){
+			clearInterval(this.interval);
+			isRunning = false;
+		},
+		//switch the status of the cell on clicking
+		onClick: function(){
+
 		}
 	}
 
@@ -167,5 +199,34 @@ const myBoard = {
 function startGame(){
 		myBoard.start();
 }
+
+//stop/run the canvas on clicking the button
+document.querySelector('#runbtn').addEventListener('click', function(evt){
+	if (isRunning){
+		myBoard.stop();
+		this.textContent = "Run";
+	}
+	else{
+		myBoard.continue(myBoard.ms);
+		this.textContent = "Stop";
+	}
+})
+
+/*
+	1) stop the canvas on clicking the canvas if running
+	2) switch cell if not running
+*/
+document.querySelector('#canvas').addEventListener('click', function(evt){
+	if (isRunning){
+		myBoard.stop();
+		document.querySelector('#runbtn').textContent = "Run";
+	}
+	else{
+		console.log(evt.offsetX, " ", evt.offsetY);
+		console.log(myBoard.pixelToIndex(evt.offsetX, evt.offsetY));
+		myBoard.flipCeil(...myBoard.pixelToIndex(evt.offsetX, evt.offsetY));
+	}
+})
+
 
 startGame();
