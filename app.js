@@ -4,6 +4,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const BoardDS = require('./ds.js');
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,9 @@ require('./db.js');
 
 const app = express();
 const Comment = mongoose.model('Comment');
+
+//enable all cors request to my server
+app.use(cors());
 
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));

@@ -1,5 +1,7 @@
 /*
 myboard.js
+front-end js that animates game of life board
+
 Acknowledgement: 
 	https://bitstorm.org/gameoflife/;
 	https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity;
@@ -42,6 +44,8 @@ class Board{
 	}
 
 	getCell(row, col){
+		if (row < 0 || row >= this.pixels || col < 0 || col >= this.pixels)
+			return false;
 		return this.data[row * this.pixels + col];
 	}
 
@@ -229,4 +233,5 @@ document.querySelector('#canvas').addEventListener('click', function(evt){
 })
 
 
+	
 startGame();

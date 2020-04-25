@@ -1,4 +1,4 @@
-<h2> {{title}} not yet playable, sorry</h2>
+<h2> {{title}} playable, have a try</h2>
 
 <div id="canvas-container">
 	<canvas id="canvas"></canvas>
@@ -10,20 +10,19 @@
 <div id="user-alive-rule-container">
 	<form action="/" method="post">
 		<label for="user-alive-rule">Enter your own rule</label>
-		<textarea id="user-alive-rule" name="rule" placeholder="this.isAlive = function(left, right, up, down){
+		<textarea id="user-alive-rule" name="rule" placeholder="function(isAlive, left, right, up, down, topleft, topRight, downleft, downRight){
 			let neighborsAlive = 0;
-			if (left)
-				neighborsAlive++;
-			if (right)
-				neighborsAlive++;
-			if (up)
-				neighborsAlive++;
-			if (down)
-				neighborsAlive++;
-			return (neighborsAlive === 2 || neighborsAlive === 3);
+			for (let x of Array.from(arguments).slice(1)){
+					if (x)
+						neighborsAlive++;
+			}
+			return ((isAlive && (neighborsAlive === 2 || neighborsAlive === 3)) || neighborsAlive == 3);
 		}"></textarea><br>
-		<input type="submit" name="submit-button">
+		<input id="sbmbut" type="submit" name="submit-button">
 	</form>
 </div>
 
+
+
 <script type="text/javascript" src="/myboard.js"></script>
+<script type="text/javascript" src="/validate.js"></script>
