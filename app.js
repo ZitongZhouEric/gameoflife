@@ -52,6 +52,7 @@ app.post('/', jsonParser, (req, res) => {
 	 	else{
 	 		console.log(`user:${user.username}, saved to db\n`);
 	 		new Board({
+	 			username: user.username,
 	 			name: req.body.name,
 	 			board: req.body.data,
 	 			user: user._id
@@ -73,9 +74,19 @@ app.post('/', jsonParser, (req, res) => {
 	
 })
 
+//
 app.get('/community', (req, res) => {
 	Comment.find({}, (err, comments) => {
 		res.render('community', {title: 'this is /community', comments: comments});
+	})
+	
+});
+
+//handles XHR for displaying boards
+app.get('/community-request-grid', (req, res) => {
+
+	Board.find({}, (err, boards) => {
+		res.json({success: true, boards: boards});
 	})
 	
 });

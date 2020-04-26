@@ -10,79 +10,6 @@ Acknowledgement:
 //board is running
 let isRunning = false;
 
-//data structure of the board 
-class Board{
-
-	//data is an array of boolean, presumasbly of size 100x100 
-	constructor(data, lineWidth, pixelWidth, pixels) {
-		this.data = data;
-		this.oldData = undefined;
-		this.lineWidth = lineWidth;
-		this.pixelWidth = pixelWidth;
-		this.pixels = pixels;
-		this.isAlive = function(isAlive, topLeft, top, topRight, left, right, btmLeft, btm, btmRight){
-			//count the number of live neighbors
-			let neighborsAlive = Array.from(arguments).slice(1).filter(x => x).length;
-			
-			return ((isAlive && (neighborsAlive === 2 || neighborsAlive === 3)) || neighborsAlive == 3);
-		}
-	};
-
-	populate(value){
-		for (let i = 0; i < this.pixels * this.pixels; i++)
-			this.data.push(value);
-	}
-
-	setCell2(row, col, value){
-		this.data[row * this.pixels + col] = value;
-	}
-
-	setCell(row, col, data, value){
-		data[row * this.pixels + col] = value;
-	}
-
-	getCell(row, col){
-		if (row < 0 || row >= this.pixels || col < 0 || col >= this.pixels)
-			return false;
-		return this.data[row * this.pixels + col];
-	}
-
-	getOldCell(row, col){
-		return this.oldData[row * this.pixels + col];
-	}
-
-	setAliveRule(func){
-		//TODO: check func is a valid rule
-		this.isAlive = func;
-	}
-
-	next(){
-		//make a copy of data
-		let newdata = [...this.data];
-		for (let row = 0; row < this.pixels; row++){
-			for (let col = 0; col < this.pixels; col++){
-				let left = this.getCell(row, col - 1) || false;
-				let right = this.getCell(row, col + 1) || false;
-				let up = this.getCell(row - 1, col) || false;
-				let down = this.getCell(row + 1, col) || false;
-				let topLeft = this.getCell(row - 1, col - 1) || false;
-				let topRight = this.getCell(row - 1, col + 1) || false;
-				let downLeft = this.getCell(row + 1, col - 1) || false;
-				let downRight = this.getCell(row + 1, col + 1) || false;
-
-				this.setCell(row, col, newdata, this.isAlive(this.getCell(row, col), topLeft, up, topRight, left, right, downLeft, down, downRight));
-			}
-		}
-
-		if (this.data === newdata)
-			return "STOP";
-		this.oldData = this.data;
-		this.data = newdata;
-
-		return "CONT";
-	}
-}
-
 //front-end, animated, html canvas for displaying the board
 const myBoard = {
 		canvas: document.getElementById('canvas'),
@@ -114,10 +41,12 @@ const myBoard = {
 		renderCanvasOnNext: function(){
 			for (let row = 0; row < this.pixels; row++){
 				for (let col = 0; col < this.pixels; col++){
+					//to activate
 					if (!this.board.getOldCell(row, col) && this.board.getCell(row, col)){
 						this.context.fillStyle = "#EEEE00";
 						this.context.fillRect(...this.indexToPixel(row, col), this.pixelWidth - 1, this.pixelWidth - 1);
 					}
+					//to deactivate
 					else if (this.board.getOldCell(row, col) && !this.board.getCell(row, col)){
 						this.context.fillStyle = "#FFFFFF";
 						this.context.fillRect(...this.indexToPixel(row, col), this.pixelWidth - 1, this.pixelWidth - 1);
@@ -172,7 +101,7 @@ const myBoard = {
 			this.canvas.height = this.canvas.width;
 
 			//initialize board data structure
-			this.board = new Board([], this.lineWidth, this.pixelWidth, this.pixels);
+			this.board = new Board([], this.pixels);
 			this.board.populate(false);
 			this.boardGridSetup();
 
@@ -279,8 +208,6 @@ function trimData(data){
 			break;
 		}
 	}
-
-
 
 	const newdata = [];
 	for(let row = trim1; row < width - trim2; row++){
