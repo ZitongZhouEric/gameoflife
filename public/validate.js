@@ -8,27 +8,101 @@ Acknowledgement:
 	API Documentation: https://google.github.io/caja/docs/cajajs/
 */
 
+
+
+//initialize google caja in the background
+caja.initialize({ cajaServer: 'http://caja.appspot.com', debug: true});
+
+let tamedTesting = undefined;
+caja.whenReady(function() {
+		caja.markFunction(testing);
+		tamedTesting = caja.tame(testing);
+	});
+
+
+//validate user's customized code with regex
+let base = "//alive:bool, indicates current cell's status\\n//neighbors:\\[bool\\], 8-bool array of neighbors' status\\nfunction isAlive\\(alive, neighbors\\)\\{(.|\n)*\\}";
+let func = "//alive:bool, indicates current cell's status\n//neighbors:[bool], 8-bool array of neighbors' status\nfunction isAlive(alive, neighbors){\n\treturn true;\n}";
+
+var regex = new RegExp("^" + base + "$", "i");
+
+document.getElementById('user-alive-rule').addEventListener('input', function(evt){
+	let userCode = this.value;
+	if (!regex.test(userCode)){
+		this.value = func;
+	}else{
+		func = this.value;
+	}
+})
+
+//test if the function toTest behaves as supposedly, return bool
+function testing(toTest){
+
+	//takes a 9-digit binary, converts into a 9-boolean array
+	let binToInput = function(bi){
+		return ('0'.repeat(8 - bi.toString(2).length) + bi.toString(2))
+				.split('')
+				.map(e => (e === 1? true : false));
+	}
+
+	//test if the output is bool on all input
+	for (bi = 0b0; bi <= 0b11111111; bi++){
+		let neighbors = binToInput(bi);
+		if (typeof toTest(true, neighbors) != 'boolean'){
+			return false;
+		}
+		if (typeof toTest(false, neighbors) != 'boolean'){
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+
 /*
 	google caja for validation
 */
 document.getElementById('sbmbut').addEventListener('click', function(evt){
+	//pause the canvas
+	if (isRunning){
+		myBoard.stop();
+		document.querySelector('#runbtn').textContent = "Run";
+	}
 
-	let userCode = this.value;
+	let userCode = document.getElementById('user-alive-rule').value;
+	let testingCode = userCode + ';return tamedTesting(isAlive);';
+	// let tamedTesting = undefined;
+
+	try {
+		caja.load(undefined, undefined, function(frame) {
+	    	frame.code(undefined, 'application/javascript', testingCode)  // input source code
+	    	.api({tamedTesting : tamedTesting})
+	    	.run(function(result) {
+	    		console.log('eval:', result);
+
+	    		//if tested positive
+	    		if(result){
+	    			applyUserRule(userCode);
+	    		}
+	    		else{
+					alert("Use a valid boolean function!");
+	    		}
+	    	});
+	    	// caja.untame(tamedTesting);
+	    });
+	} catch (err) {
+		console.log(err)
+		alert("Use a valid boolean function!");
+	}
+
+
 	
-
-	function ping(x, y){alert(x + y); return x * y;};
-	/* host page code */
-	caja.initialize({ cajaServer: 'http://caja.appspot.com' });
-	caja.whenReady(function() {
-		caja.markFunction(ping);
-	});
-	caja.load(undefined, undefined, function(frame) {
-    	frame.code('http://example.com/default.js', 'application/javascript','return tamedPing(x, y);')  // input source code
-    		.api({ x: 3, y: 4, tamedPing: caja.tame(ping)})
-    		.run(function(result) {
-    			console.log('eval:', result);
-    		});
-    });
-
 	evt.preventDefault();
 });
+
+
+
+
+

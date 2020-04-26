@@ -20,7 +20,7 @@ class Board{
 		this.lineWidth = lineWidth;
 		this.pixelWidth = pixelWidth;
 		this.pixels = pixels;
-		this.isAlive = function(isAlive, left, right, up, down, topleft, topRight, downleft, downRight){
+		this.isAlive = function(isAlive, topLeft, top, topRight, left, right, btmLeft, btm, btmRight){
 			let neighborsAlive = 0;
 			for (let x of Array.from(arguments).slice(1)){
 					if (x)
@@ -72,7 +72,7 @@ class Board{
 				let downLeft = this.getCell(row + 1, col - 1) || false;
 				let downRight = this.getCell(row + 1, col + 1) || false;
 
-				this.setCell(row, col, newdata, this.isAlive(this.getCell(row, col), left, right, up, down, topLeft, topRight, downLeft, downRight));
+				this.setCell(row, col, newdata, this.isAlive(this.getCell(row, col), topLeft, up, topRight, left, right, downLeft, down, downRight));
 			}
 		}
 
@@ -131,7 +131,6 @@ const myBoard = {
 			let ctx = this.context;
 			this.board.next();
 			this.renderCanvasOnNext();
-			//TODO: render;
 		},
 		boardGridSetup: function(){
 			let ctx = this.context;
@@ -232,6 +231,21 @@ document.querySelector('#canvas').addEventListener('click', function(evt){
 	}
 })
 
+//
+function applyUserRule(userCode){
+	const funcBodyRegex = new RegExp('function isAlive\\(alive, neighbors\\)\\{(.|\n)*\\}')
+	const toCrop = 34;
+	const funcBody = funcBodyRegex.exec(userCode)[0].slice(toCrop);
+
+	const ff = new Function('alive', 'neighbors', funcBody);
+	const userIsAliveFunc = function(alive,a,b,c,d,e,f,g,h) {
+		return ff(alive, [a,b,c,d,e,f,g,h]); 
+	};
+	
+	startGame();
+	myBoard.board.isAlive = userIsAliveFunc;
+	
+}
 
 	
 startGame();

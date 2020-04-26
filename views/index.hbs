@@ -10,14 +10,8 @@
 <div id="user-alive-rule-container">
 	<form action="/" method="post">
 		<label for="user-alive-rule">Enter your own rule</label>
-		<textarea id="user-alive-rule" name="rule" placeholder="function(isAlive, left, right, up, down, topleft, topRight, downleft, downRight){
-			let neighborsAlive = 0;
-			for (let x of Array.from(arguments).slice(1)){
-					if (x)
-						neighborsAlive++;
-			}
-			return ((isAlive && (neighborsAlive === 2 || neighborsAlive === 3)) || neighborsAlive == 3);
-		}"></textarea><br>
+		<textarea id="user-alive-rule" name="rule">//alive:bool, indicates current cell's status&#13;&#10;//neighbors:[bool], 8-bool array of neighbors' status&#13;&#10;function isAlive(alive, neighbors){&#13;&#10;&#9;return true;&#13;&#10;}
+		</textarea><br>
 		<input id="sbmbut" type="submit" name="submit-button">
 	</form>
 </div>
