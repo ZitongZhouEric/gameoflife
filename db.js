@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
 
 const BoardSchema = new mongoose.Schema({
   user: {type: mongoose.Schema.ObjectId, ref: 'UserSchema'},
-  name: {type: String, required: true},
+  name: {type: String},
   board: [Boolean],
   createdAt: Date
 });

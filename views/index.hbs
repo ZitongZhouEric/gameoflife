@@ -12,10 +12,18 @@
 		<label for="user-alive-rule">Enter your own rule</label>
 		<textarea id="user-alive-rule" name="rule">//alive:bool, indicates current cell's status&#13;&#10;//neighbors:[bool], 8-bool array of neighbors' status&#13;&#10;function isAlive(alive, neighbors){&#13;&#10;&#9;return true;&#13;&#10;}
 		</textarea><br>
-		<input id="sbmbut" type="submit" name="submit-button">
+		<input id="sbmbut" type="submit" name="submit-button" value="Apply">
 	</form>
 </div>
 
+<div>
+	<label for="username">Enter username:</label>
+	<input id="username" type="text" name="username" placeholder="player01">
+	<label for="board-name">Enter board name:</label>
+	<input id="board-name" type="text" name="board-name" placeholder="Glider">
+	<button id="submit-board-only-btn">Submit Board</button>
+	<button id="submit-board-rule-btn">Submit Board and Rule</button>
+</div>
 
 
 <script type="text/javascript" src="/myboard.js"></script>

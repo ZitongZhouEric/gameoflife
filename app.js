@@ -5,6 +5,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const BoardDS = require('./ds.js');
 const PORT = process.env.PORT || 3000;
@@ -14,9 +15,9 @@ require('./db.js');
 
 const app = express();
 const Comment = mongoose.model('Comment');
+const Board = mongoose.model('Board');
+const User = mongoose.model('User');
 
-//enable all cors request to my server
-app.use(cors());
 
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -27,12 +28,49 @@ app.get('/', (req, res) => {
 	res.render('index', {title: "this is /"});
 });
 
-app.post('/', (req, res) => {
-	//TODO: Store this rule in the database? perhaps
-	//TODO: Use this rule in the front-end js to render board
-	let userRule = req.body.rule;
-	console.log(userRule);
-	res.redirect('/');
+const jsonParser = bodyParser.json();
+app.post('/', jsonParser, (req, res) => {
+	//TODO: Store this rule in the database?
+	console.log(req.body);
+
+	let onResponse = function(good){
+		if(good){
+			res.json({success: true});
+		}else{
+			res.status(500).json({success: false});
+		}
+	}
+	//TODO: NOOOOO, call back hell
+	new User({
+	 	username: req.body.username,
+	 	board: undefined
+	 }).save((err, user) => {
+	 	if (err){
+	 		console.log(err);
+	 		onResponse(false);
+	 	}
+	 	else{
+	 		console.log(`user:${user.username}, saved to db\n`);
+	 		new Board({
+	 			name: req.body.name,
+	 			board: req.body.data,
+	 			user: user._id
+	 		}).save((err, board) => {
+	 			if (err){
+	 				console.log(err);
+	 				onResponse(false);
+	 			}
+	 			else{
+	 				console.log(`board:${board.name}, saved to db\n`);
+	 				User.updateOne({_id: user._id}, {board: board._id}, (err, log) => {
+	 					console.log("err:", err, "\nlogggggg:", log);
+	 				});
+	 				onResponse(true);
+	 			}
+	 		})
+	 	}
+	 })
+	
 })
 
 app.get('/community', (req, res) => {

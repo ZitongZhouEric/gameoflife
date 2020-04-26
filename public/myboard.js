@@ -21,11 +21,9 @@ class Board{
 		this.pixelWidth = pixelWidth;
 		this.pixels = pixels;
 		this.isAlive = function(isAlive, topLeft, top, topRight, left, right, btmLeft, btm, btmRight){
-			let neighborsAlive = 0;
-			for (let x of Array.from(arguments).slice(1)){
-					if (x)
-						neighborsAlive++;
-			}
+			//count the number of live neighbors
+			let neighborsAlive = Array.from(arguments).slice(1).filter(x => x).length;
+			
 			return ((isAlive && (neighborsAlive === 2 || neighborsAlive === 3)) || neighborsAlive == 3);
 		}
 	};
@@ -247,5 +245,94 @@ function applyUserRule(userCode){
 	
 }
 
+//trim board data, getting rid of "false" rows and cols, return a n^2 size bool array representing data
+function trimData(data){
+	const width = Math.floor(Math.sqrt(data.length));
+	const max_trim = Math.floor((width - 1) / 2);
+
+	let trim1 = 0
+	for (; trim1 < max_trim; trim1++){
+		const rowTop = trim1, colLeft = trim1;
+		let breakFlag = false;
+		for (i = 0; i < width; i++){
+			if (myBoard.board.getCell(rowTop, i) || myBoard.board.getCell(i, colLeft)){
+				breakFlag = true;
+				break;
+			}
+		}
+		if (breakFlag){
+			break;
+		}
+	}
+
+	let trim2 = 0
+	for (; trim2 < width - trim1; trim2++){
+		const rowDown = width - 1 - trim2, colRight = width - 1 - trim2;
+		let breakFlag = false;
+		for (i = 0; i < width; i++){
+			if (myBoard.board.getCell(rowDown, i) || myBoard.board.getCell(i, colRight)){
+				breakFlag = true;
+				break;
+			}
+		}
+		if (breakFlag){
+			break;
+		}
+	}
+
+
+
+	const newdata = [];
+	for(let row = trim1; row < width - trim2; row++){
+		for(let col = trim1; col < width - trim2; col++){
+			newdata.push(myBoard.board.getCell(row, col));
+		}
+	}
+	return newdata;
+} 
+
+/*
+	send board only to the server AJAX
+*/
+
+document.getElementById('submit-board-only-btn').addEventListener('click', function (evt) {
+	//check if the username entered is empty
+	if (document.getElementById('username').value === ''){
+		alert('enter a valid username to submit');
+		return;
+	}
+
+	//stop the board from running
+	if (isRunning){
+		myBoard.stop();
+		document.querySelector('#runbtn').textContent = "Run";
+	}
+
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', '/', true);
+	xhr.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200){
+			console.log('responseText: ', this.responseText);
+		}
+	};
+	
+	//TODO: truncate unused(filled with 'false') rows and cols in DATA before sending
+	let bd = JSON.stringify({username: document.getElementById('username').value, name: document.getElementById('board-name').value, data: trimData(myBoard.board.data)});
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.send(bd);
+
+});
+
+/*
+	TODO: send board and rule to the server, AJAX
+*/
+document.getElementById('submit-board-rule-btn').addEventListener('click', function (evt) {
+	if (isRunning){
+		myBoard.stop();
+		document.querySelector('#runbtn').textContent = "Run";
+	}
+
+	// body... 
+});
 	
 startGame();

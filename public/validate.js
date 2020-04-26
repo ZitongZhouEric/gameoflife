@@ -1,7 +1,7 @@
 /*
 validate.js
 
-front-end js that 1) validates user's customized rule 2.1) restart the page if valid 2.2) send to server via XHR if valid
+front-end js that 1) validates user's customized rule 2.1) restart the page if valid 2.2) apply the rule
 
 Acknowledgement:
 	https://developers.google.com/caja/docs/runningjavascript
@@ -60,7 +60,6 @@ function testing(toTest){
 }
 
 
-
 /*
 	google caja for validation
 */
@@ -73,7 +72,6 @@ document.getElementById('sbmbut').addEventListener('click', function(evt){
 
 	let userCode = document.getElementById('user-alive-rule').value;
 	let testingCode = userCode + ';return tamedTesting(isAlive);';
-	// let tamedTesting = undefined;
 
 	try {
 		caja.load(undefined, undefined, function(frame) {
@@ -90,15 +88,12 @@ document.getElementById('sbmbut').addEventListener('click', function(evt){
 					alert("Use a valid boolean function!");
 	    		}
 	    	});
-	    	// caja.untame(tamedTesting);
 	    });
 	} catch (err) {
 		console.log(err)
 		alert("Use a valid boolean function!");
 	}
 
-
-	
 	evt.preventDefault();
 });
 
