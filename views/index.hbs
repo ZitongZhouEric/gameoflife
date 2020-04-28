@@ -1,28 +1,33 @@
-<h2> {{title}} playable, have a try</h2>
+<link rel="stylesheet" href="css/index.css">
+
+<h2> {{title}} </h2>
 
 <div id="canvas-container">
 	<canvas id="canvas"></canvas>
-	<button id="runbtn">Run</button>
+	<div id="control-bar">
+		<button id="runbtn">Run</button>
+	</div>
 </div>
+
 
 
 
 <div id="user-alive-rule-container">
 	<form action="/" method="post">
-		<label for="user-alive-rule">Enter your own rule</label>
-		<textarea id="user-alive-rule" name="rule">//alive:bool, indicates current cell's status&#13;&#10;//neighbors:[bool], 8-bool array of neighbors' status&#13;&#10;function isAlive(alive, neighbors){&#13;&#10;&#9;return true;&#13;&#10;}
+		<label class="rule-container" for="user-alive-rule">Enter your own rule:</label>
+		<textarea class="rule-container" id="user-alive-rule" name="rule">//alive:bool, indicates current cell's status&#13;&#10;//neighbors:[bool], 8-bool array of neighbors' status&#13;&#10;function isAlive(alive, neighbors){&#13;&#10;&#9;return true;&#13;&#10;}
 		</textarea><br>
-		<input id="sbmbut" type="submit" name="submit-button" value="Apply">
+		<input class="rule-container" id="sbmbut" type="submit" name="submit-button" value="Apply">
 	</form>
 </div>
 
-<div>
-	<label for="username">Enter username:</label>
+<div id="submit-container" class="submit-container">
+	<label for="username">Username:</label>
 	<input id="username" type="text" name="username" placeholder="player01">
-	<label for="board-name">Enter board name:</label>
+	<label for="board-name">Board name:</label>
 	<input id="board-name" type="text" name="board-name" placeholder="Glider">
-	<button id="submit-board-only-btn">Submit Board</button>
-	<button id="submit-board-rule-btn">Submit Board and Rule</button>
+	<button id="submit-board-only-btn">Submit</button>
+	<!-- <button id="submit-board-rule-btn">Submit Board and Rule</button> -->
 </div>
 
 

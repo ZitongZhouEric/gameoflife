@@ -1,31 +1,24 @@
+<link rel="stylesheet" href="css/community.css">
+
 <h2>this is the community page</h2>
 
-<div id="boards-grid">
-	<!-- <p>TODO: a table of boards on display</p>
-
-
-
-
-	<div id="board">
-		<p>TODO: a board</p>
-		<p>click on the board to view and add comments</p>
-
-		<ul>
-			{{#each comments as |comment|}}
-			<li>{{this.username}}: {{this.comment}}</li>
-			{{/each}}
-		</ul>
-		<form action="/community" method="post">
-			<label for="username">Username: </label>
-			<input id="username" type="text" name="username"> <br>
-			<label for="comment">Comment</label>
-			<textarea id="comment" name="comment"></textarea><br>
-			<input type="submit" name="submit-button">
-
+<div id="boards-grid"></div>
+<div id='comment-section'>
+	<div id="placeholder"></div>
+	<div>
+		<form class='post-comment'>
+			<label class='post-comment' for="username">Username: </label>
+			<input class='post-comment' id="username" type="text" name="username" required> <br>
+			<label class='post-comment' for="comment-textarea">Comment</label>
+			<textarea class='post-comment' id="comment-textarea" name="comment-textarea" required></textarea><br>
+			<input class='post-comment' type="submit" id="submit-comment-btn">
 		</form>
-	</div> -->
-	
+	</div>
 </div>
+	
+
+
+	
 
 
 <script type="text/javascript" src="/community.js"></script>

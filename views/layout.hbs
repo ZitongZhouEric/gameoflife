@@ -4,12 +4,20 @@
 	<title>Game of Life</title>
 	<script type="text/javascript" src="http://caja.appspot.com/caja.js"></script>
 	<script type="text/javascript" src="/Board.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/layout.css">
 </head>
 <body>
-	<a href="/">Home</a>
-	<a href="/community">View Community Boards</a>
-	{{{body}}}
+	<div class="sidebar">
+	  <a class="active" href="/">Play</a>
+	  <a href="/community">Forum</a>
+	</div>
 
-	<p>in memoriam of John Horton Conway (1937 - 2020)</p>
+	<div class="content">
+		{{{body}}}
+		<div id="memor">
+			<p>in memoriam of <a href="https://www.princeton.edu/news/2020/04/14/mathematician-john-horton-conway-magical-genius-known-inventing-game-life-dies-age">John Horton Conway</a> (1937 - 2020)</p>
+		</div>
+	</div>
+	
 </body>
 </html>
