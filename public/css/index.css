@@ -1,8 +1,39 @@
 #canvas-container {
-	padding: 2px;
+	/*padding: 10px;*/
 }
 
 canvas {
 	/*border: 1px solid #d3d3d3;*/
 	background-color: #f1f1f1;
+}
+
+#control-bar{
+	padding-top: 7px;
+	text-align: left;
+}
+
+#user-alive-rule-container{
+	max-width: 880px;
+	margin-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#submit-container{
+	max-width: 880px;
+	margin-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#user-alive-rule{
+	max-width: 865px;
+	width: 865px;
+	height: 100px;
+	font-family: Courier;
+}
+
+.rule-container{
+	display: block;
+	margin: 2px;
 }

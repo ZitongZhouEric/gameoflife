@@ -12,7 +12,8 @@ const mongooseOptions = {
 // blueprint for documents
 const UserSchema = new mongoose.Schema({
   username: {type: String, required: true},
-  board: {type: mongoose.Schema.ObjectId, ref: 'BoardSchema'}
+  board: {type: mongoose.Schema.ObjectId, ref: 'BoardSchema'},
+  createdAt: { type : Date, default: Date.now }
 });
 
 const BoardSchema = new mongoose.Schema({
@@ -20,14 +21,14 @@ const BoardSchema = new mongoose.Schema({
   username: {type: String, required: true},
   name: {type: String},
   board: [Boolean],
-  createdAt: Date
+  createdAt: { type : Date, default: Date.now }
 });
 
 const CommentSchema = new mongoose.Schema({
   username: String,
   comment: {type: String, required: true},
   board: {type: mongoose.Schema.ObjectId, ref: 'BoardSchema'},
-  createdAt: Date,
+  createdAt: { type : Date, default: Date.now },
   quote: {type: mongoose.Schema.ObjectId, ref: 'CommentSchema'}
 });
 

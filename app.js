@@ -25,7 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
-	res.render('index', {title: "this is /"});
+	//TODO: check query string boardID
+	res.render('index', {title: "this is the game of life, have a try"});
 });
 
 const jsonParser = bodyParser.json();
@@ -64,7 +65,7 @@ app.post('/', jsonParser, (req, res) => {
 	 			else{
 	 				console.log(`board:${board.name}, saved to db\n`);
 	 				User.updateOne({_id: user._id}, {board: board._id}, (err, log) => {
-	 					console.log("err:", err, "\nlogggggg:", log);
+	 					console.log("err: ", err, "\n savelog: ", log);
 	 				});
 	 				onResponse(true);
 	 			}
@@ -88,13 +89,56 @@ app.get('/community-request-grid', (req, res) => {
 	Board.find({}, (err, boards) => {
 		res.json({success: true, boards: boards});
 	})
+
+});
+
+app.get('/community-get-comments', (req, res) => {
+	if (!req.query.bid){
+		console.log('bid not found');
+		res.json({success: false});
+	}
+	else{
+		Comment.find({board : mongoose.Types.ObjectId(req.query.bid)}).sort({createdAt : 1}).exec((err, comments) => {
+			res.json({success: true, comments: comments});
+		});
+		
+	}
 	
 });
+
+app.post('/community-post-comment', jsonParser, (req, res) => {
+	console.log(req.body);
+
+	let onResponse = function(good){
+		if(good){
+			res.json({success: true});
+		}else{
+			res.status(500).json({success: false});
+		}
+	}
+
+	new Comment({
+		username: req.body.username,
+		comment: req.body.comment,
+		board: mongoose.Types.ObjectId(req.body.bid)
+	}).save((err, comment) => {
+		if (err) {
+			console.log(err);
+			onResponse(false);
+		} 
+		else {
+			console.log(comment, "saved in db\n");
+			onResponse(true);
+		}
+		
+	}); 
+})
 
 app.post('/community', (req, res) => {
 	new Comment({
 		username: req.body.username,
-		comment: req.body.comment
+		comment: req.body.comment,
+		board: mongoose.Types.ObjectId("5ea86488a8561a214dd1b470")
 	}).save((err, comment) => {
 		console.log(comment, "saved in db\n");
 	});

@@ -1,0 +1,29 @@
+.board-container{
+	display: inline-block;
+	max-width: 200px;
+	padding: 8px;
+}
+
+p{
+	margin: 1px;
+	font-size: 13px;
+}
+
+#comment-section{
+	margin-top: 25px;
+	margin-left: 8px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: #f1f1f1;
+}
+
+.comment{
+	padding: 3px;
+}
+
+.post-comment{
+	margin-top: 25px;
+	margin-left: 8px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
