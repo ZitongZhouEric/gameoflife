@@ -117,10 +117,6 @@ const myBoard = {
 		stop: function(){
 			clearInterval(this.interval);
 			isRunning = false;
-		},
-		//switch the status of the cell on clicking
-		onClick: function(){
-
 		}
 	}
 
@@ -243,23 +239,25 @@ document.getElementById('submit-board-only-btn').addEventListener('click', funct
 		}
 	};
 	
-	//TODO: truncate unused(filled with 'false') rows and cols in DATA before sending
-	let bd = JSON.stringify({username: document.getElementById('username').value, name: document.getElementById('board-name').value, data: trimData(myBoard.board.data)});
+	let bd = JSON.stringify({username: document.getElementById('username').value, 
+								name: document.getElementById('board-name').value, 
+								data: trimData(myBoard.board.data)
+							});
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(bd);
 
 });
 
-/*
-	TODO: send board and rule to the server, AJAX
-*/
-document.getElementById('submit-board-rule-btn').addEventListener('click', function (evt) {
-	if (isRunning){
-		myBoard.stop();
-		document.querySelector('#runbtn').textContent = "Run";
-	}
+// /*
+// 	TODO: send board and rule to the server, AJAX
+// */
+// document.getElementById('submit-board-rule-btn').addEventListener('click', function (evt) {
+// 	if (isRunning){
+// 		myBoard.stop();
+// 		document.querySelector('#runbtn').textContent = "Run";
+// 	}
 
-	// body... 
-});
+// 	// body... 
+// });
 	
 startGame();

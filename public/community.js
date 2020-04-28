@@ -6,6 +6,19 @@ Acknowledgement:
 	
 */ 
 
+//the array that stores the thumbnails on the page to be rendered
+let boardThumbnails = undefined;
+const commentSection = {
+	DOM: document.getElementById('comment-section'),
+	placeholderDiv: document.getElementById('placeholder'),
+	bt: undefined, //thumbnail of the displayed board
+	comments: undefined, // the json comments array
+	clear: function(){
+		while(this.placeholderDiv.firstChild){
+			this.placeholderDiv.removeChild(this.placeholderDiv.lastChild);
+		}
+	}
+}
 
 function populate(num, elem){
 		let d = [];
@@ -16,8 +29,10 @@ function populate(num, elem){
 }
 
 class BoardThumbnail{
-	constructor(data, env, name, username){
+	constructor(data, env, name, username, _id){
+		this.bid = _id;
 		this.canvas = document.createElement('canvas');
+		this.container = document.createElement('div');
 		this.env = env;
 		this.context = this.canvas.getContext('2d');
 		this.pixelWidth = 8;
@@ -65,16 +80,28 @@ class BoardThumbnail{
 					ctx.fillRect(...this.indexToPixel(row, col), this.pixelWidth - 1, this.pixelWidth - 1);
 		}
 
-		this.env.appendChild(this.canvas);
+		const nameTag = document.createElement('p');
+		nameTag.textContent = this.name;
+		const authorTag = document.createElement('p');
+		authorTag.textContent = `Creator: ${this.username}`;
+
+		this.container.appendChild(this.canvas);
+		this.container.appendChild(nameTag);
+		this.container.appendChild(authorTag);
+		this.container.setAttribute('class', 'board-container');
+
+		this.env.appendChild(this.container);
 
 	}
 	thumbnailify(data){
 		let dataWidth = Math.floor(Math.sqrt(data.length));
 		let newdata = [];
 
+		//if the matrix happens to be the right dimension
 		if (data.length === this.pixels * this.pixels){
 			return data;
 		}
+		//if the matrix is smaller
 		else if (data.length < this.pixels * this.pixels){
 			const x = (this.pixels - dataWidth) / 2;
 			const upGap = Math.ceil(x), leftGap = upGap, downGap = Math.floor(x), rightGap = downGap;
@@ -88,7 +115,7 @@ class BoardThumbnail{
 			newdata = newdata.concat(populate(downGap * this.pixels, false));
 		}
 		else{
-			const row_offset = Math.floor((dataWidth - this.pixels) / 2), col_offset = row;
+			const row_offset = Math.floor((dataWidth - this.pixels) / 2), col_offset = row_offset;
 			for (let row = 0; row < this.pixels; row++){
 				newdata = newdata.concat(data.slice((row_offset + row) * dataWidth + col_offset, (row_offset + row) * dataWidth + col_offset + this.pixels));
 			}
@@ -101,20 +128,103 @@ class BoardThumbnail{
 	}
 }
 
+class Comment{
+	constructor(author, comment, date, env){
+		this.author = author;
+		this.comment = comment;
+		this.date = new Date(date);
+		this.env = env;
+		this.div = document.createElement('div');
+	}
+
+	render(){
+		this.div.innerHTML = this.author + ':' + this.comment + '<br>@' + this.date.getMonth() + '.' + this.date.getDate() + '.' + this.date.getFullYear();
+		this.div.setAttribute('class', 'comment');
+		this.env.appendChild(this.div);
+		this.env.appendChild(document.createElement('hr'));
+	}
+}
+
 //send xhr to the server to get a list of boards
 function loadBoards(){
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/community-request-grid', true);
-	xhr.onreadystatechange = function () {
+	xhr.open('GET', '/community-request-grid?t=' + Math.random(), true);
+	xhr.onreadystatechange = function() {
 		if (this.readyState === 4 && this.status === 200){
+			//on Receiving Thumbnails
+
 			const responseJSON = JSON.parse(this.responseText);
 			const boards = responseJSON.boards;
 	
 			const env = document.getElementById('boards-grid');
-			const boardThumbnails = boards.map(b => new BoardThumbnail(b.board, env, b.name, b.username));			
+			boardThumbnails = boards.map(b => new BoardThumbnail(b.board, env, b.name, b.username, b._id));
+
+			//on Rendering Thumbnails
+			attachCommentSectionListeners();			
 		}
 	};
 	xhr.send();
 }
+
+function onLoadCommentListener(bt){
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', `/community-get-comments?t=${Math.random()}&bid=${bt.bid}`, true);
+	xhr.onreadystatechange = function(){
+		if (this.readyState === 4 && this.status === 200){
+			let comments = JSON.parse(this.responseText).comments;
+			commentObjs = comments.map(c => new Comment(c.username, c.comment, c.createdAt, commentSection.placeholderDiv));
+
+			//if a new thumbnail is clicked, refresh; if it's the same thumbnail, check for updates
+			if (bt !== commentSection.bt || commentSection.comments !== comments){
+				commentSection.clear();
+				commentObjs.forEach(v => v.render());
+				commentSection.comments = comments;
+			}
+			commentSection.bt = bt;
+			
+		}
+	}
+	xhr.send();
+}
+
+
+function attachCommentSectionListeners(){
+	boardThumbnails.forEach(bt => {
+		bt.canvas.addEventListener('click', () => onLoadCommentListener(bt));
+	})
+}
+
+/*
+	post comment to the server AJAX
+*/
+
+document.getElementById('submit-comment-btn').addEventListener('click', function (evt) {
+	//check if the username entered is empty
+	if (document.getElementById('username').value === '' || document.getElementById('comment-textarea').value === ''){
+		alert('Username and Comment can\'t be empty');
+		return;
+	}
+
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', '/community-post-comment', true);
+	xhr.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200){
+			console.log('responseText: ', this.responseText);
+			onLoadCommentListener(commentSection.bt);
+		}
+	};
+	
+	
+	let comment = JSON.stringify({username: document.getElementById('username').value, 
+								comment: document.getElementById('comment-textarea').value,
+								bid: commentSection.bt.bid
+							});
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.send(comment);
+
+	evt.preventDefault();
+
+});
+
 
 loadBoards();
