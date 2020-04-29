@@ -3,13 +3,15 @@
 ## Overview
 
 An interactive implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life), a cellular automation game, that allows
-- customized (programmable?) rules
+- customized (programmable!) rules
 - customized board setup, in-game modification
-- users to share their own game config with the community and make comments
+- users to share their own game with the community and make comments
 - more features to be added...
 
 
 ## Data Model
+
+NOTE: This has changed greatly over the course of development
 
 The application will store User, Board and Comment
 
@@ -51,7 +53,7 @@ An example Comment
 ```
 
 
-## [Link to Commented First Draft Schema](db.js)
+## [Link to Commented Schema](db.js)
 
 ## Wireframes
 
@@ -63,10 +65,20 @@ An example Comment
 
 ![community wireframe](documentation/community.png)
 
+## Snapshots
+
+/ - homepage for playing your own game
+
+![home](documentation/index.png)
+
+/community - page for community games
+
+![community](documentation/comu.png)
+
 ## Site map
 There are two sites:
 
-www.gameoflife2020.com/ <-> www.gameoflife2020.com/community
+http://linserv1.cims.nyu.edu:27334/ <-> http://linserv1.cims.nyu.edu:27334/community
 
 ## User Stories or Use Cases
 
@@ -78,17 +90,15 @@ www.gameoflife2020.com/ <-> www.gameoflife2020.com/community
 ## Research Topics
 
 * (3 points) HTML Canvas with Client Side JavaScript
-* (3 points) Unit Testing with Mocha
-* (4 points) Perform client side form validation using a JavaScript library
-* (4 points) React
-    * used React as the frontend framework
+* (5 points) Google Caja - API for user code validation/sanitization/evaluation
 
-11 points total out of 8 required points
+8 points total out of 8 required points
 
 
-## [Link to Initial Main Project File](app.js)
+## [Link to Entry Point](app.js)
 
 ## Annotations / References Used
 
-1. [tutorial on using Mocha for unit testing](https://mochajs.org/#getting-started) - (source code not added yet)
-2. [tutorial on react](https://reactjs.org/tutorial/tutorial.html) - (source code not added yet)
+1. Inspiration: https://bitstorm.org/gameoflife/;
+2. w3school demo: https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity, https://www.w3schools.com/howto/howto_css_sidebar_responsive.asp
+3. Google Caja: https://developers.google.com/caja/docs/runningjavascript, https://google.github.io/caja/docs/cajajs/
