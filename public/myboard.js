@@ -10,6 +10,10 @@ Acknowledgement:
 //board is running
 let isRunning = false;
 
+//obtain query string
+const urlParams = new URLSearchParams(window.location.search);
+const bid = urlParams.get('bid');
+
 //front-end, animated, html canvas for displaying the board
 const myBoard = {
 		canvas: document.getElementById('canvas'),
@@ -82,30 +86,48 @@ const myBoard = {
 				ctx.stroke();
 			}
 
-			//default "activated" cell
-			this.board.setCell2(0, 1,true);
-
-			//ctx.fillRect(col, row, widthcol, widthrow)
-			ctx.fillRect(...this.indexToPixel(0, 1), this.pixelWidth - 1, this.pixelWidth - 1);
-
-			this.board.setCell2(1, 1,true);
-			ctx.fillRect(...this.indexToPixel(1, 1), this.pixelWidth - 1, this.pixelWidth - 1);
-
-			this.board.setCell2(2, 1,true);
-			ctx.fillRect(...this.indexToPixel(2, 1), this.pixelWidth - 1, this.pixelWidth - 1);
-
+			this.renderCanvasOnNext();
 		},
-		start: function () {
+		start: function (bid) {
 			
 			this.canvas.width = this.pixels * (this.pixelWidth + this.lineWidth) + this.lineWidth;
 			this.canvas.height = this.canvas.width;
 
-			//initialize board data structure
-			this.board = new Board([], this.pixels);
-			this.board.populate(false);
-			this.boardGridSetup();
+			//initialize board data structure, check if bid is supplied
+			//if yes, xhr request
+			if (bid){
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', '/get-board?bid=' + bid, true);
+				const myBoard_alias = this;
+				xhr.onreadystatechange = function() {
+					if (this.readyState === 4 && this.status === 200){
+						//on Receiving Thumbnails
+						const thumbnail = JSON.parse(this.responseText).board;
+						const data = deThumbnailify(thumbnail.board, myBoard_alias.pixels);
 
-			this.frameNo = 0;
+						myBoard_alias.board = new Board(data, myBoard_alias.pixels);
+						// const env = document.getElementById('boards-grid');
+						// boardThumbnails = boards.map(b => new BoardThumbnail(b.board, env, b.name, b.username, b._id));
+
+						// //on Rendering Thumbnails
+						// attachCommentSectionListeners();	
+						myBoard_alias.boardGridSetup();
+						myBoard_alias.frameNo = 0;		
+					}
+				};
+				xhr.send();
+			}
+			//no use default board
+			else{
+				this.board = new Board(deThumbnailify([false, true, false, false, true, false, false, true, false], this.pixels), this.pixels);
+				this.board.populate(false);
+				this.boardGridSetup();
+				this.frameNo = 0;
+			}
+			
+			
+
+			
 
 			//this.continue(1000);
 			
@@ -120,10 +142,43 @@ const myBoard = {
 		}
 	}
 
+//convert a thumbnail to a board data
+function deThumbnailify(data, targetPixels){
+	
+	function populate(num, elem){
+		let d = [];
+		for (let i = 0; i < num; i++){
+			d.push(elem);
+		}
+		return d;
+	}
 
+	let dataWidth = Math.floor(Math.sqrt(data.length));
+	let newdata = [];
 
-function startGame(){
-		myBoard.start();
+	//if the matrix happens to be the right dimension
+	if (data.length === targetPixels * targetPixels){
+		return data;
+	}
+	//if the matrix is smaller
+	else if (data.length < targetPixels * targetPixels){
+		const x = (targetPixels - dataWidth) / 2;
+		const upGap = Math.ceil(x), leftGap = upGap, downGap = Math.floor(x), rightGap = downGap;
+		newdata = newdata.concat(populate(upGap * targetPixels, false));
+
+		for(let i = 0; i < dataWidth; i++){
+			newdata = newdata.concat(populate(leftGap, false))
+			.concat(data.slice(i * dataWidth, (i + 1) * dataWidth))
+			.concat(populate(rightGap, false))
+		}
+		newdata = newdata.concat(populate(downGap * targetPixels, false));
+	}
+		
+	return newdata;
+}
+
+function startGame(bid){
+		myBoard.start(bid);
 }
 
 //stop/run the canvas on clicking the button
@@ -165,7 +220,7 @@ function applyUserRule(userCode){
 		return ff(alive, [a,b,c,d,e,f,g,h]); 
 	};
 	
-	startGame();
+	startGame(bid);
 	myBoard.board.isAlive = userIsAliveFunc;
 	
 }
@@ -260,4 +315,4 @@ document.getElementById('submit-board-only-btn').addEventListener('click', funct
 // 	// body... 
 // });
 	
-startGame();
+startGame(bid);

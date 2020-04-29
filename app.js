@@ -29,6 +29,15 @@ app.get('/', (req, res) => {
 	res.render('index', {title: "this is the game of life, have a try"});
 });
 
+//handles XHR for loading board with bid
+app.get('/get-board', (req, res) => {
+
+	Board.findOne({_id: req.query.bid}, (err, board) => {
+		res.json({success: true, board: board});
+	})
+
+});
+
 const jsonParser = bodyParser.json();
 app.post('/', jsonParser, (req, res) => {
 	//TODO: Store this rule in the database?

@@ -138,7 +138,7 @@ class Comment{
 	}
 
 	render(){
-		this.div.innerHTML = this.author + ':' + this.comment + '<br>@' + this.date.getMonth() + '.' + this.date.getDate() + '.' + this.date.getFullYear();
+		this.div.innerHTML = this.author + ': ' + this.comment + '<br>@' + this.date.getMonth() + '.' + this.date.getDate() + '.' + this.date.getFullYear();
 		this.div.setAttribute('class', 'comment');
 		this.env.appendChild(this.div);
 		this.env.appendChild(document.createElement('hr'));
@@ -160,7 +160,7 @@ function loadBoards(){
 			boardThumbnails = boards.map(b => new BoardThumbnail(b.board, env, b.name, b.username, b._id));
 
 			//on Rendering Thumbnails
-			attachCommentSectionListeners();			
+			attachThumbnailListeners();			
 		}
 	};
 	xhr.send();
@@ -178,6 +178,7 @@ function onLoadCommentListener(bt){
 			if (bt !== commentSection.bt || commentSection.comments !== comments){
 				commentSection.clear();
 				commentObjs.forEach(v => v.render());
+				document.getElementById('post-comment-container').style.display = 'block';
 				commentSection.comments = comments;
 			}
 			commentSection.bt = bt;
@@ -187,10 +188,15 @@ function onLoadCommentListener(bt){
 	xhr.send();
 }
 
-
-function attachCommentSectionListeners(){
+//attach listeners:
+//1) onclick, open comment sections
+//2) doubleclick, goto /?bid=bt
+function attachThumbnailListeners(){
 	boardThumbnails.forEach(bt => {
 		bt.canvas.addEventListener('click', () => onLoadCommentListener(bt));
+	})
+	boardThumbnails.forEach(bt => {
+		bt.canvas.addEventListener('dblclick', () => window.location.href = `/?bid=${bt.bid}`);
 	})
 }
 
