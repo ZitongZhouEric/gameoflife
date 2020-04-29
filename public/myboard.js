@@ -88,7 +88,7 @@ const myBoard = {
 
 			this.renderCanvasOnNext();
 		},
-		start: function (bid) {
+		start: function () {
 			
 			this.canvas.width = this.pixels * (this.pixelWidth + this.lineWidth) + this.lineWidth;
 			this.canvas.height = this.canvas.width;
@@ -220,8 +220,9 @@ function applyUserRule(userCode){
 		return ff(alive, [a,b,c,d,e,f,g,h]); 
 	};
 	
-	startGame(bid);
 	myBoard.board.isAlive = userIsAliveFunc;
+	//myBoard.continue(myBoard.ms);
+	
 	
 }
 
@@ -315,4 +316,4 @@ document.getElementById('submit-board-only-btn').addEventListener('click', funct
 // 	// body... 
 // });
 	
-startGame(bid);
+startGame();
