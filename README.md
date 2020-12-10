@@ -9,62 +9,6 @@ An interactive implementation of [Conway's Game of Life](https://en.wikipedia.or
 - more features to be added...
 
 
-## Data Model
-
-NOTE: This has changed greatly over the course of development
-
-The application will store User, Board and Comment
-
-* User can have multiple Board (via references)
-* each Board can have multiple Comment (via references)
-
-An Example User:
-
-```javascript
-{
-  uid: "nv982jc9304" //some hash
-  username: "gliderlover",
-  hash: // a password hash,
-  lists: [glider, gun, myspaceship1]// an array of references to Board documents
-}
-```
-
-An Example Board:
-
-```javascript
-{
-  user: gliderlover// a reference to a User object
-  name: "Breakfast foods", //default to empty string
-  board: //a large enough 2d-matrix of bool values, representing the game board
-  createdAt: // timestamp
-}
-```
-
-An example Comment
-
-```javascript
-{
-  user: gliderlover // a reference to a User object
-  title: "", //default to empty string
-  comment: "nice work with the spaceship!" //plain-text
-  createdAt: // timestamp
-  quote: // a reference to the quote
-}
-```
-
-
-## [Link to Commented Schema](db.js)
-
-## Wireframes
-
-/ - homepage for playing your own game
-
-![root wireframe](documentation/root.png)
-
-/community - page for community games
-
-![community wireframe](documentation/community.png)
-
 ## Snapshots
 
 / - homepage for playing your own game
@@ -76,6 +20,8 @@ An example Comment
 ![community](documentation/comu.png)
 
 ## Site map
+!!!As of now the website is down, will move to a different domain soon
+
 There are two sites:
 
 http://linserv1.cims.nyu.edu:27334/ <-> http://linserv1.cims.nyu.edu:27334/community
@@ -87,15 +33,6 @@ http://linserv1.cims.nyu.edu:27334/ <-> http://linserv1.cims.nyu.edu:27334/commu
 3. as a user, I can choose to share my game with the community
 3. as a user, I can view, play, and comment on community games
 
-## Research Topics
-
-* (3 points) HTML Canvas with Client Side JavaScript
-* (5 points) Google Caja - API for user code validation/sanitization/evaluation
-
-8 points total out of 8 required points
-
-
-## [Link to Entry Point](app.js)
 
 ## Annotations / References Used
 
